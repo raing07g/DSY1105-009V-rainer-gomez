@@ -22,7 +22,7 @@ open class Bicicleta(
     open val tarifaBase: Double = 0.0
 
     open fun calcularCobroBase(minutos: Long): Double {
-        val horas = minutos / 60.0
+        val horas = minutos.toDouble() / 60.0
         return horas * tarifaBase
     }
 
@@ -48,7 +48,7 @@ class BiciCiudad(
     override val tarifaBase: Double = 800.0
 
     override fun calcularCobroBase(minutos: Long): Double {
-        var horas = minutos / 60.0
+        var horas = minutos.toDouble() / 60.0
         if (tipoCliente == TipoCliente.ABONADO) {
             horas *= 0.80
         }
@@ -67,7 +67,7 @@ class BiciMontana(
         if (minutos < 20) {
             return 0.0
         }
-        val horas = minutos / 60.0
+        val horas = minutos.toDouble() / 60.0
         return horas * tarifaBase
     }
 }
@@ -81,7 +81,7 @@ class BiciElectrica(
     override val tarifaBase: Double = 2200.0
 
     override fun calcularCobroBase(minutos: Long): Double {
-        val horas = minutos / 60.0
+        val horas = minutos.toDouble() / 60.0
         var total = horas * tarifaBase
         if (esLargaAutonomia) {
             total *= 1.30

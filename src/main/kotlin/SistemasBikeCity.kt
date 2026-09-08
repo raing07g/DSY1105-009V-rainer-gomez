@@ -15,7 +15,6 @@ class SistemaBikeCity {
     }
 
     suspend fun registrarEntrada(bici: Bicicleta) {
-        // Validación de código (Imprime aviso y usa return para NO detener la app)
         if (!validarCodigo(bici.codigo)) {
             println("Error: El código '${bici.codigo}' no cumple con el formato válido.")
             return
@@ -93,7 +92,7 @@ class SistemaBikeCity {
 
     fun mostrarReporteCierre() {
         println("\n--------------------------------------------------")
-        println("             REPORTE DE CIERRE DE TURNO           ")
+        println("              REPORTE DE CIERRE DE TURNO           ")
         println("--------------------------------------------------")
 
         if (historialTickets.isEmpty()) {
