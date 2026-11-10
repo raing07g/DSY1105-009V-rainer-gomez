@@ -1,9 +1,8 @@
 package com.example.my_app.model
 
-data class PerfilUiState(
+data class PerfilUIState(
     val nombre: String = "",
-    val email: String = "",
-    val fotoUri: String? = null,
-    val isLoading: Boolean = true,
-    val error: String? = null
+    val correo: String = "",
+    val fotoUri: String = "",
+    val isLoading: Boolean = true
 )

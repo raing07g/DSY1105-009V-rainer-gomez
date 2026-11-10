@@ -1,47 +1,66 @@
 package com.example.my_app.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.my_app.model.NavigationRoute
+import androidx.navigation.navArgument
+import com.example.my_app.repository.UserPreferencesRepository
+import com.example.my_app.screens.DetalleProyectoScreen
 import com.example.my_app.screens.HomeScreen
 import com.example.my_app.screens.RegistroScreen
-import com.example.my_app.screens.PerfilScreen
 import com.example.my_app.viewmodel.RegistroViewModel
-import com.example.my_app.viewmodel.PerfilViewModel
 
 @Composable
-fun AppNavHost(
-    registroViewModel: RegistroViewModel,
-    perfilViewModel: PerfilViewModel
-) {
+fun AppNavHost(repository: UserPreferencesRepository) {
     val navController = rememberNavController()
+
+    val registroViewModel: RegistroViewModel = viewModel(
+        factory = RegistroViewModel.Factory(repository)
+    )
 
     NavHost(
         navController = navController,
-        startDestination = NavigationRoute.Home.ruta
+        startDestination = "home"
     ) {
-        composable(NavigationRoute.Home.ruta) {
+        composable("home") {
             HomeScreen(
-                onNavigateToRegistro = { navController.navigate(NavigationRoute.Registro.ruta) },
-                onNavigateToPerfil = { navController.navigate(NavigationRoute.Perfil.ruta) }
-            )
-        }
-        composable(NavigationRoute.Registro.ruta) {
-            RegistroScreen(
-                viewModel = registroViewModel,
-                onNavigateHome = {
-                    navController.navigate(NavigationRoute.Home.ruta) {
-                        popUpTo(NavigationRoute.Home.ruta) { inclusive = true }
-                    }
+                onNavigateToDetalle = { proyectoId ->
+                    navController.navigate("detalle/$proyectoId")
+                },
+                onNavigateToRegistro = {
+                    navController.navigate("registro")
                 }
             )
         }
-        composable(NavigationRoute.Perfil.ruta) {
-            PerfilScreen(
-                viewModel = perfilViewModel,
-                onNavigateBack = { navController.popBackStack() }
+
+        composable(
+            route = "detalle/{proyectoId}",
+            arguments = listOf(
+                navArgument("proyectoId") {
+                    type = NavType.StringType
+                    defaultValue = "1"
+                }
+            )
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("proyectoId") ?: "1"
+            DetalleProyectoScreen(
+                proyectoId = id,
+                onNavigateToRegistro = { navController.navigate("registro") },
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        composable("registro") {
+            RegistroScreen(
+                viewModel = registroViewModel,
+                onSolicitudGuardada = {
+                    navController.navigate("home") {
+                        popUpTo("home") { inclusive = true }
+                    }
+                }
             )
         }
     }
